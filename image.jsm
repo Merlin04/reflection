@@ -1,11 +1,12 @@
 export default {
     "_loadESString.fragment.js": `exports = async function(codeStr) { return await import("data:text/javascript;charset=utf-8," + encodeURIComponent(codeStr)); }`,
-    "_bootstrapEntrypoint.jsm": `import localforage from "https://cdn.skypack.dev/localforage";
-export default async function main(image) {
+    "_bootstrapEntrypoint.jsm": `export default async function main(image) {
+    // Can't import relative URIs in a module created by _loadESString.fragment.js because it doesn't know where it's from
+    const localforage = await import(import.meta.url + "_localforage/localforage.jsm");
     // TODO: is this really how I should do this?
     image["_bootstrap.html"] = await (await fetch("/")).text();
+    image["image.jsm"] = await (await fetch("/image.jsm")).text();
     console.log("Hello from the bootstrap entrypoint!");
-    console.log(image);
 
     // Load image into localStorage
     for(const [key, value] of Object.entries(image)) {
@@ -21,7 +22,8 @@ export default async function main(image) {
 
     let thisOrigin = new URL(location.href).origin;
     let urlObj = new URL(e.request.url);
-    if(urlObj.origin !== thisOrigin) return fetch(e.request);
+    if(urlObj.origin !== thisOrigin || e.request.url.includes("_localforage")) return fetch(e.request);
+    console.log("Proceeding to serve " + e.request.url + " from localforage");
 
     let url = urlObj.pathname.slice(1);
     if(url.length === 0) url = "index.html";
@@ -42,15 +44,18 @@ export default async function main(image) {
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <style>
+        textarea { width: 100%; height: calc(100vh - 3rem); }
+    </style>
 </head>
 <body>
     Hello world from reflection!
     <button id="saveBtn">Save</button>
-    <button onclick="window.location.reload">Reload</button>
+    <button onclick="window.location.reload()">Reload</button>
     <br>
     <textarea id="code"></textarea>
     <script type="module">
-        import localforage from "https://cdn.skypack.dev/localforage";
+        import localforage from "/_localforage/localforage.jsm";
 
         void async function() {
             document.getElementById("code").value = await localforage.getItem("index.html");
@@ -62,6 +67,8 @@ export default async function main(image) {
 
         document.getElementById("saveBtn").addEventListener("click", save);
     </script>
+</script>
+
 </body>
 </html>`
 };

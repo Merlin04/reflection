@@ -6,11 +6,20 @@
     <title>Reflection bootstrapper</title>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
     <script type="module">
-        import image from "./image.jsm";
+        import localforage from "./_localforage/localforage.jsm";
 
-        let exports;
-        eval(image["_loadESString.fragment.js"]);
-        exports(image["_bootstrapEntrypoint.jsm"]).then(module => module.default(image));
+        void async function() {
+            // Sometimes chrome will just ignore the service worker, so auto reload the page
+            // TODO: does this actually work? It might not
+            if((await localforage.keys()).length > 0 && (await navigator.serviceWorker.getRegistrations()).length > 0) {
+                window.location.reload();
+            }
+
+            const image = (await import("/image.jsm")).default;
+            let exports;
+            eval(image["_loadESString.fragment.js"]);
+            exports(image["_bootstrapEntrypoint.jsm"]).then(module => module.default(image));
+        }();
     </script>
 </head>
 <body>
