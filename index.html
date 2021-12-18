@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Reflection bootstrapper</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <script type="module">
+        import image from "./image.jsm";
+
+        let exports;
+        eval(image["_loadESString.fragment.js"]);
+        exports(image["_bootstrapEntrypoint.jsm"]).then(module => module.default(image));
+    </script>
+</head>
+<body>
+    <h1>Bootstrapping...</h1>
+</body>
+</html>
