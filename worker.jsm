@@ -4,7 +4,6 @@
 import localforage from "/_localforage/localforage.jsm";
 
 self.addEventListener("fetch", event => {
-    console.log("received fetch event");
     event.respondWith(async function() {
         const workerSrc = await localforage.getItem("_workerFetch.fragment.js");
         let exports;
