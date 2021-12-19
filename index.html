@@ -10,7 +10,6 @@
 
         void async function() {
             // Sometimes chrome will just ignore the service worker, so auto reload the page
-            // TODO: does this actually work? It might not
             if((await localforage.keys()).length > 0 && (await navigator.serviceWorker.getRegistrations()).length > 0) {
                 window.location.reload();
             }
@@ -24,5 +23,6 @@
 </head>
 <body>
     <h1>Bootstrapping...</h1>
+    <p>Not working? Try using Chrome</p>
 </body>
 </html>

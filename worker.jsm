@@ -3,14 +3,6 @@
 
 import localforage from "/_localforage/localforage.jsm";
 
-self.addEventListener("install", event => {
-    event.waitUntil(async function() {
-        console.log("service worker installed!");
-    }());
-});
-
-console.log("hello world!");
-
 self.addEventListener("fetch", event => {
     console.log("received fetch event");
     event.respondWith(async function() {
