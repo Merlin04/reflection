@@ -6,7 +6,7 @@
     <title>Reflection bootstrapper</title>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
     <script type="module">
-        import localforage from "./_localforage/localforage.jsm";
+        import localforage from "https://cdn.skypack.dev/localforage";
 
         void async function() {
             // Sometimes chrome will just ignore the service worker or not import the scripts the worker depends on
@@ -14,19 +14,18 @@
             if((await localforage.keys()).length > 0) {
                 if((await navigator.serviceWorker.getRegistrations()).length > 0)
                     await (await navigator.serviceWorker.getRegistrations())[0].unregister();
-                await navigator.serviceWorker.register("/worker.jsm", { type: "module", scope: "/" });
+                await navigator.serviceWorker.register("/worker.js", { scope: "/" });
                 window.location.reload();
             }
 
-            const image = (await import("/image.jsm")).default;
+            const image = (await import("/image.mjs")).default;
             let exports;
             eval(image["_loadESString.fragment.js"]);
-            exports(image["_bootstrapEntrypoint.jsm"]).then(module => module.default(image));
+            exports(image["_bootstrapEntrypoint.mjs"]).then(module => module.default(image));
         }();
     </script>
 </head>
 <body>
     <h1>Bootstrapping...</h1>
-    <p>Not working? Try using Chrome</p>
 </body>
 </html>
