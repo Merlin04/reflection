@@ -1,0 +1,17 @@
+{
+  "name": "reflection-editor",
+  "version": "1.0.0",
+  "main": "index.html",
+  "repository": "https://github.com/Merlin04/reflection",
+  "author": "Merlin04 <Merlin04@users.noreply.github.com>",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "d": "vercel dev"
+  },
+  "devDependencies": {
+    "serve": "^13.0.2",
+    "vercel": "^23.1.2"
+  },
+  "dependencies": {}
+}
