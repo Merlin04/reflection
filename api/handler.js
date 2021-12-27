@@ -14,7 +14,13 @@ export default function handler(req, res) {
     if (filename === "") {
         filename = "index.html";
     }
-    const fileSrc = image[filename];
+    let fileSrc = image[filename];
+
+    if (filename === "index.html") {
+        // Inject bootstrap script
+        const scriptTag = `<script type="module" src="/bootstrap.mjs"></script>`;
+        fileSrc = fileSrc.replace(/<\/body>/, scriptTag + "</body>");
+    }
 
     if (!fileSrc) {
         res.writeHead(404, { "Content-Type": "text/plain" });
