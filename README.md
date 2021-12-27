@@ -1,6 +1,6 @@
 # reflection
 
-### Self-hosting web code editor (for Hack Club CodeJelly)
+### Self-hosting web code editor (originally for Hack Club CodeJelly)
 
 ![Screenshot of editor](screenshot.png)
 
