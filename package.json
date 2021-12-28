@@ -13,5 +13,7 @@
     "serve": "^13.0.2",
     "vercel": "^23.1.2"
   },
-  "dependencies": {}
+  "dependencies": {
+    "@babel/standalone": "^7.16.6"
+  }
 }

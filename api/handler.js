@@ -1,6 +1,9 @@
 import image from "../image";
+import { transform } from "@babel/standalone";
 
 // Set up mocked worker environment
+
+const Babel = { transform };
 
 const location = {
     // The domain the server is serving on
@@ -74,6 +77,9 @@ const fetch = async (..._) => new Response("404 not found", {
     status: 404,
     statusText: "Not found"
 });
+
+// Mocked `self` object (nothing needs to be in it for now, it's just storage for the worker to use)
+const self = {};
 
 // Load the worker code from the image (in closure to not redeclare exports)
 const onFetch = (() => {
