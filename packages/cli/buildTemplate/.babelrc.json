@@ -1,0 +1,16 @@
+{
+    "assumptions": {},
+    "babelrc": false,
+    "plugins": [],
+    "presets": [
+        ["react", { "runtime": "classic" }],
+        ["stage-2", {
+            "decoratorsBeforeExport": false,
+            "decoratorsLegacy": false,
+            "pipelineProposal": "minimal"
+        }],
+        "typescript"
+    ],
+    "sourceMap": false,
+    "sourceType": "module"
+}

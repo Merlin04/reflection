@@ -1,5 +1,11 @@
-import image from "../image";
 import { transform } from "@babel/standalone";
+import type { NextApiRequest, NextApiResponse } from "next";
+
+// TODO: Load image
+const image: Record<string, string> = {
+    // Sure copilot, that works
+    "index.html": "<!DOCTYPE html><html><head><title>Image</title></head><body><img src=\"/image.png\" /></body></html>",
+}
 
 // Set up mocked worker environment
 
@@ -12,8 +18,18 @@ const location = {
 
 // Mocked `Response` class
 class Response {
-    constructor(body = null, options = {}) {
-        this.status = typeof options.status === "number" ? options.status : 200;
+    status: number;
+    ok: boolean;
+    statusText: string;
+    headers: Record<string, string>;
+    body: string | null;
+
+    constructor(body: string | null = null, options: {
+        status?: number;
+        statusText?: string;
+        headers?: Record<string, string>;
+    } = {}) {
+        this.status = options.status ?? 200;
         this.ok = this.status >= 200 && this.status < 300;
         this.statusText = options.statusText || "OK";
         this.headers = options.headers || {};
@@ -28,26 +44,19 @@ const unimplemented = () => {
     throw new Error("Not implemented");
 };
 
+const readonly = () => {
+    throw new Error("Localforage on server is read-only");
+}
+
 const localforage = {
-    getItem: async key => image[key],
-    setItem: async (key, value) => {
-        image[key] = value;
-    },
-    removeItem: async key => {
-        delete image[key];
-    },
-    clear: async () => {
-        image = {};
-    },
+    getItem: async (key: string) => image[key],
+    setItem: readonly,
+    removeItem: readonly,
+    clear: readonly,
     length: async () => Object.keys(image).length,
-    key: async index => Object.keys(image)[index],
+    key: async (index: number) => Object.keys(image)[index],
     keys: async () => Object.keys(image),
-    iterate: async iteratorCallback => {
-        // Iterate over all value/key pairs in datastore.
-        // `iteratorCallback` is called once for each pair, with the following arguments:
-        // 1. value
-        // 2. key
-        // 3. iterationNumber
+    iterate: async <T = any>(iteratorCallback: { (value: string, key: string, iterationNumber: number): T | undefined }): Promise<T | void> => {
         // `iterate` supports early exit by returning non `undefined` value inside the callback.
         // Resulting value will be passed to `iterate`'s return value.
 
@@ -66,11 +75,12 @@ const localforage = {
     ready: unimplemented,
     supports: unimplemented,
     createInstance: unimplemented,
-    createInstance: unimplemented
+    dropInstance: unimplemented
 };
 
 // Mocked `fetch` that returns a 404 `Response`
-const fetch = async (..._) => new Response("404 not found", {
+// Can accept parameters but they aren't used for anything
+const fetch = async (..._: any) => new Response("404 not found", {
     headers: {
         "Content-Type": "text/plain"
     },
@@ -82,14 +92,18 @@ const fetch = async (..._) => new Response("404 not found", {
 const self = {};
 
 // Load the worker code from the image (in closure to not redeclare exports)
+type WorkerFetchHandler = (e: {
+    request: unknown
+}, localforageInst: typeof localforage) => Promise<Response>;
+
 const onFetch = (() => {
-    let exports;
+    let exports: WorkerFetchHandler | undefined;
     eval(image["_workerFetch.fragment.js"]);
-    return exports;
+    return exports!;
 })();
 
 // Handles all requests to the page
-export default async function handler(req, res) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     // Run the fetch handler
     const newReq = { ...req, url: location.href + req.url };
     const response = await onFetch({
@@ -99,7 +113,7 @@ export default async function handler(req, res) {
     if (req.url === "/" || req.url === "/index.html") {
         // Inject bootstrap script
         const scriptTag = `<script type="module" src="/bootstrap.mjs"></script>`;
-        response.body = response.body.replace(/<\/body>/, scriptTag + "</body>");
+        response.body = response.body?.replace(/<\/body>/, scriptTag + "</body>") ?? null;
     }
 
     // Call `res` functions with data from `response`

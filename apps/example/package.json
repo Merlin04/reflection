@@ -1,0 +1,22 @@
+{
+  "name": "@reflectkit/example",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "build": "echo TODO",
+    "d": "vercel dev"
+  },
+  "dependencies": {
+    "@reflectkit/editor": "*",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2"
+  },
+  "devDependencies": {
+    "@reflectkit/cli": "*",
+    "@reflectkit/server": "*",
+    "@types/react": "^17.0.38",
+    "@types/react-dom": "^17.0.11",
+    "tsconfig": "*",
+    "vercel": "^23.1.2"
+  }
+}

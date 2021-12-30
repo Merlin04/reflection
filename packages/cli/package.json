@@ -1,0 +1,61 @@
+{
+  "name": "@reflectkit/cli",
+  "description": "Reflectkit CLI",
+  "version": "0.0.0",
+  "bin": {
+    "reflectkit": "./bin/run"
+  },
+  "dependencies": {
+    "@oclif/core": "^1",
+    "@oclif/plugin-help": "^5",
+    "@oclif/plugin-plugins": "^2.0.1",
+    "ignore-walk": "^4.0.1",
+    "minimatch": "^3.0.4"
+  },
+  "devDependencies": {
+    "@types/ignore-walk": "^4.0.0",
+    "@types/node": "^16.9.4",
+    "eslint": "^7.32.0",
+    "eslint-config-oclif": "^4",
+    "eslint-config-oclif-typescript": "^1.0.2",
+    "globby": "^11",
+    "oclif": "^2.0.0-main.10",
+    "shx": "^0.3.3",
+    "ts-node": "^10.2.1",
+    "tslib": "^2.3.1",
+    "typescript": "^4.4.3"
+  },
+  "engines": {
+    "node": ">=12.0.0"
+  },
+  "files": [
+    "/bin",
+    "/dist",
+    "/oclif.manifest.json"
+  ],
+  "license": "MIT",
+  "main": "dist/index.js",
+  "dirname": "reflectkit",
+  "oclif": {
+    "bin": "reflectkit",
+    "commands": "./dist/commands",
+    "plugins": [
+      "@oclif/plugin-help",
+      "@oclif/plugin-plugins"
+    ],
+    "topicSeparator": " ",
+    "topics": {
+      "hello": {
+        "description": "Say hello to the world and others"
+      }
+    }
+  },
+  "scripts": {
+    "build": "shx rm -rf dist && tsc -b",
+    "lint": "eslint . --ext .ts --config .eslintrc",
+    "postpack": "shx rm -f oclif.manifest.json",
+    "prepack": "yarn build && oclif manifest && oclif readme",
+    "version": "oclif readme && git add README.md"
+  },
+  "types": "dist/index.d.ts"
+}

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reflection editor</title>
+    <style>
+        body {
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+
+        #app {
+            flex: 1;
+            padding: 1rem;
+        }
+
+        body,
+        #app {
+            display: flex;
+            flex-direction: column;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app"></div>
+
+    <!-- This code is required for reflection editor to function -->
+    <script src="https://unpkg.com/react/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/reakit"></script>
+    <script src="https://unpkg.com/reakit-system-bootstrap"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/monaco-editor/min/vs/loader.js"></script>
+    <script>
+        require.config({ paths: { vs: "https://cdn.jsdelivr.net/npm/monaco-editor/min/vs" } });
+        require(["vs/editor/editor.main"], () => {
+            document.dispatchEvent(new CustomEvent("monaco-editor-ready"));
+        });
+    </script>
+
+    <script type="module" src="/index.tsx"></script>
+    <!-- End reflection editor code -->
+    
+</body>
+
+</html>

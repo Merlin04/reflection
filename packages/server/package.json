@@ -1,0 +1,17 @@
+{
+  "name": "@reflectkit/server",
+  "version": "0.0.0",
+  "main": "./index.ts",
+  "types": "./index.ts",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/babel__core": "^7.1.17",
+    "@types/babel__standalone": "^7.1.4",
+    "@types/next": "^9.0.0",
+    "tsconfig": "*",
+    "typescript": "^4.5.3"
+  },
+  "dependencies": {
+    "@babel/standalone": "^7.16.6"
+  }
+}

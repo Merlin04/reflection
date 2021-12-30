@@ -1,19 +1,42 @@
 {
-  "name": "reflection-editor",
-  "version": "1.0.0",
-  "main": "index.html",
-  "repository": "https://github.com/Merlin04/reflection",
-  "author": "Merlin04 <Merlin04@users.noreply.github.com>",
-  "license": "MIT",
+  "name": "reflectkit",
+  "version": "0.0.0",
   "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
   "scripts": {
-    "d": "vercel dev"
+    "build": "turbo run build",
+    "dev": "turbo run dev --parallel",
+    "lint": "turbo run lint",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\""
   },
   "devDependencies": {
-    "serve": "^13.0.2",
-    "vercel": "^23.1.2"
+    "prettier": "^2.5.1",
+    "turbo": "latest"
   },
-  "dependencies": {
-    "@babel/standalone": "^7.16.6"
+  "turbo": {
+    "baseBranch": "origin/kit",
+    "pipeline": {
+      "build": {
+        "dependsOn": [
+          "^build"
+        ],
+        "outputs": [
+          "dist/**"
+        ]
+      },
+      "lint": {
+        "outputs": []
+      },
+      "dev": {
+        "cache": false
+      }
+    }
+  },
+  "engines": {
+    "npm": ">=7.0.0",
+    "node": ">=14.0.0"
   }
 }
